@@ -1,6 +1,6 @@
 // import { useState } from 'react'
 
-import { Header } from "./components/layout/general/Header"
+import { Header } from "./components/layout/public/Header"
 
 function App() {
   
@@ -8,6 +8,10 @@ function App() {
   return (
     <div className="layout">
       <Header />
+
+      <section className="layout__content">
+        
+      </section>
     </div>
   )
 }
