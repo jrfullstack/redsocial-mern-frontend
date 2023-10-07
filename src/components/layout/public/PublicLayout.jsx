@@ -10,6 +10,8 @@ export const PublicLayout = () => {
             <section className="layout__content">
                 <Outlet/>
             </section>
+
+            
         </>
     );
 }
