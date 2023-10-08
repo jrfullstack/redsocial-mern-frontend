@@ -5,15 +5,15 @@ import useAuth from "../../../hooks/useAuth";
 
 export const Sidebar = () => {
 
-    const {Auth} = useAuth();
-    console.log(Auth)
+    const {auth, counters} = useAuth();
+    console.log({auth, counters})
 
     return (
         <>
             <aside className="layout__aside">
                 <header className="aside__header">
                     {/* <h1 className="aside__title">Hola, {Auth.name}</h1> */}
-                    <h1 className="aside__title">Hola, {Auth.name}</h1>
+                    <h1 className="aside__title">Hola, {auth.name}</h1>
                 </header>
 
                 <div className="aside__container">
@@ -21,30 +21,34 @@ export const Sidebar = () => {
                         <div className="profile-info__general-info">
                             <div className="general-info__container-avatar">
                                 {/* si el usuario tiene foto subida */}
-                                {Auth.image != "default.png" && 
+                                {auth.image != "default.png" && (
                                     <img
-                                        src={Global.url + "user/avatar/" + Auth.image}
+                                        src={
+                                            Global.url +
+                                            "user/avatar/" +
+                                            auth.image
+                                        }
                                         className="container-avatar__img"
                                         alt="Foto de perfil"
-                                    />                                
-                                }
-                                
+                                    />
+                                )}
+
                                 {/* si no tiene foto */}
-                                {Auth.image == "default.png" && 
+                                {auth.image == "default.png" && (
                                     <img
                                         src={avatar}
                                         className="container-avatar__img"
                                         alt="Foto de perfil"
-                                    />                                
-                                }
+                                    />
+                                )}
                             </div>
 
                             <div className="general-info__container-names">
                                 <a href="#" className="container-names__name">
-                                    {Auth.name} {Auth.surname}
+                                    {auth.name} {auth.surname}
                                 </a>
                                 <p className="container-names__nickname">
-                                    {Auth.nick}
+                                    {auth.nick}
                                 </p>
                             </div>
                         </div>
@@ -56,7 +60,7 @@ export const Sidebar = () => {
                                         Siguiendo
                                     </span>
                                     <span className="following__number">
-                                        10
+                                        {counters.following}
                                     </span>
                                 </a>
                             </div>
@@ -66,7 +70,7 @@ export const Sidebar = () => {
                                         Seguidores
                                     </span>
                                     <span className="following__number">
-                                        13
+                                        {counters.followed}
                                     </span>
                                 </a>
                             </div>
@@ -77,7 +81,7 @@ export const Sidebar = () => {
                                         Publicaciones
                                     </span>
                                     <span className="following__number">
-                                        17
+                                        {counters.publications}
                                     </span>
                                 </a>
                             </div>

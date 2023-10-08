@@ -8,7 +8,8 @@ const AuthContext = createContext()
 
 export const AuthProvider = ({children}) => {
 
-    const [Auth, setAuth] = useState({});
+    const [auth, setAuth] = useState({});
+    const [counters, setCounters] = useState({});
 
     useEffect(() => {
     authUser();
@@ -42,16 +43,33 @@ export const AuthProvider = ({children}) => {
 
         const data = await request.json();
 
+        // peticion para los contadores
+        const requestCounters = await fetch(Global.url + "user/counters/" + userId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+            },
+        });
+
+        const dataCounters = await requestCounters.json();
+
+        
+
         // setear el estado de auth
         setAuth(data.user);
+
+        // setear el estado de conters
+        setCounters(dataCounters);
 
     };
 
     return (
         <AuthContext.Provider 
             value={{
-                Auth, 
-                setAuth
+                auth, 
+                setAuth,
+                counters
             }}
         >
             {children}
