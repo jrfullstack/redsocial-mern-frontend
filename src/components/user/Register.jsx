@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Global } from "../../helpers/Global";
 import { useForm } from "../../hooks/useForm";
 
 
@@ -5,11 +7,29 @@ import { useForm } from "../../hooks/useForm";
 export const Register = () => {
 
     const {form, changed} = useForm({});
+    const [saved, setSaved] = useState("not_sended");
 
-    const saveUser = (e) =>{
+    const saveUser = async (e) =>{
+
         e.preventDefault();
+
         let newUser = form;
-        console.log(newUser);
+
+        const request = await fetch(Global.url + "user/register", {
+            method: "POST",
+            body: JSON.stringify(newUser),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await request.json();
+        
+        if (data.status == "success") {
+            setSaved("saved");
+        }else{
+            setSaved("error");
+        }
     }
 
     return (
@@ -19,6 +39,11 @@ export const Register = () => {
             </header>
 
             <div className="content__posts">
+                {/* condicion */}
+                {saved == "saved" ? <strong className="alert alert-success"> Usuario registrado correctamente </strong>: ""}
+                {saved == "error" ? <strong className="alert alert-danger"> Usuario no se ha registrado </strong> : ""}
+                
+
                 <form onSubmit={saveUser} className="regiter-form">
                     <div className="form-group">
                         <label htmlFor="name">Nombre</label>
@@ -38,7 +63,11 @@ export const Register = () => {
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Contraseña</label>
-                        <input type="password" name="password" onChange={changed} />
+                        <input
+                            type="password"
+                            name="password"
+                            onChange={changed}
+                        />
                     </div>
 
                     <input type="submit" value="Registrate" />
