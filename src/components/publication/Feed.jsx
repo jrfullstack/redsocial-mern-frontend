@@ -1,7 +1,16 @@
 // import React from 'react'
+// import useAuth from "../../hooks/useAuth";
 import avatar from "../../assets/img/user.png";
+// import { useContext } from "react";
+// import AuthContext from "../../context/AuthProvider";
 
 export const Feed = () => {
+
+    // const {compartido} = useAuth();
+    // const {compartido} = useContext(AuthContext)
+
+    // console.log(compartido)
+
     return (
         <>
             <section className="layout__content">
