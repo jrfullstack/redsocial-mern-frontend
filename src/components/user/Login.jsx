@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Global } from "../../helpers/Global";
 import { useForm } from "../../hooks/useForm";
+import useAuth from "../../hooks/useAuth";
 
 export const Login = () => {
     const { form, changed } = useForm({});
     const [saved, setSaved] = useState("not_sended");
+    const {setAuth} = useAuth();
 
     const loginUser = async (e) => {
         e.preventDefault();
@@ -28,7 +30,19 @@ export const Login = () => {
 
         // para mostrar alerta
         if (data.status == "success") {
+
+            // cambiar el estado para mostrar alertas
             setSaved("saved");
+
+            // Set datos en el auth
+            setAuth(data.usuer);
+
+            // Redireccion
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000)
+            
+
         } else {
             setSaved("error");
         }
