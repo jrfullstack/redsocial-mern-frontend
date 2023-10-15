@@ -1,12 +1,12 @@
 // import React from 'react'
-import avatar from "../../../assets/img/user.png";
-import { Global } from "../../../helpers/Global";
 import useAuth from "../../../hooks/useAuth";
+import { Global } from "../../../helpers/Global";
+import avatar from "../../../assets/img/user.png";
 
 export const Sidebar = () => {
 
     const {auth, counters} = useAuth();
-    console.log({auth, counters})
+    // console.log({auth, counters})
 
     return (
         <>
