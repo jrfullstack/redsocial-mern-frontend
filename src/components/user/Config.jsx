@@ -15,6 +15,9 @@ export const Config = () => {
 
   const updateUser = async(e) => {
     e.preventDefault();
+
+    // toker de autorizacion
+    const token = localStorage.getItem("token");
     
     // recoger datos del formulario serializados
     let newDataUser = SerializeForm(e.target);
@@ -28,13 +31,13 @@ export const Config = () => {
       body: JSON.stringify(newDataUser),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
+        "Authorization": token
       }
     });
     
     const data = await request.json();
 
-    if (data.status == "success") {
+    if (data.status == "success" && data.user) {
       // eliminamos la clave
       delete data.user.password;
 
@@ -45,6 +48,37 @@ export const Config = () => {
       setSaved("saved");
     }else{
       setSaved("error");
+    }
+
+    // Subida de imagenes
+    const fileInput = document.querySelector('#file');
+
+    if (data.status == "success" && fileInput.files[0]) {
+
+      // Recoger imagen a subir
+      const formData = new FormData();
+      formData.append('file0', fileInput.files[0]);
+
+      // peticion para enviar la imagen
+      const uploadRequest = await fetch(Global.url + "user/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Authorization": token
+        }
+      });
+
+      const uploadData = await uploadRequest.json();
+
+      if (uploadData.status == "success" && uploadData.user) {
+        // eliminamos la clave
+        delete uploadData.user.password;
+
+        setAuth(uploadData.user);
+        setSaved("saved");
+      } else {
+        setSaved("error");
+      }
     }
   }
 
@@ -131,6 +165,7 @@ export const Config = () => {
           <br />
           <input type="submit" value="Actualizar" />
         </form>
+        <br />
       </div>
     </>
   );
