@@ -1,60 +1,75 @@
 // import React from 'react'
 import { NavLink } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
+
+import { Global } from "../../../helpers/Global";
 import avatar from "../../../assets/img/user.png"
 
 export const Nav = () => {
+
+    const {auth} = useAuth();
+
     return (
         <nav className="navbar__container-lists">
             <ul className="container-lists__menu-list">
                 <li className="menu-list__item">
-                    <a href="#" className="menu-list__link">
+                    <NavLink to="/social" className="menu-list__link">
                         <i className="fa-solid fa-house"></i>
                         <span className="menu-list__title">Inicio</span>
-                    </a>
+                    </NavLink>
                 </li>
 
                 <li className="menu-list__item">
-                    <a href="#" className="menu-list__link">
+                    <NavLink to="/social/feed" className="menu-list__link">
                         <i className="fa-solid fa-list"></i>
                         <span className="menu-list__title">Timeline</span>
-                    </a>
+                    </NavLink>
                 </li>
 
                 <li className="menu-list__item">
-                    <a href="#" className="menu-list__link">
+                    <NavLink to="/social/people" className="menu-list__link">
                         <i className="fa-solid fa-user"></i>
                         <span className="menu-list__title">Usuarios</span>
-                    </a>
+                    </NavLink>
                 </li>
-
-                {/* <li className="menu-list__item">
-                    <a href="#" className="menu-list__link">
-                        <i className="fa-regular fa-envelope"></i>
-                        <span className="menu-list__title">Mensajes</span>
-                    </a>
-                </li> */}
             </ul>
 
             <ul className="container-lists__list-end">
                 <li className="list-end__item">
                     <a href="#" className="list-end__link-image">
-                        <img
-                            src={avatar}
-                            className="list-end__img"
-                            alt="Imagen de perfil"
-                        />
+                        {/* si el usuario tiene foto subida */}
+                        {auth.image != "default.png" && (
+                            <img
+                                src={
+                                    Global.url +
+                                    "user/avatar/" +
+                                    auth.image
+                                }
+                                className="list-end__img"
+                                alt="Foto de perfil"
+                            />
+                        )}
+
+                        {/* si no tiene foto */}
+                        {auth.image == "default.png" && (
+                            <img
+                                src={avatar}
+                                className="list-end__img"
+                                alt="Foto de perfil"
+                            />
+                        )}
                     </a>
                 </li>
                 <li className="list-end__item">
                     <a href="#" className="list-end__link">
-                        <span className="list-end__name">Nickname</span>
+                        <span className="list-end__name">{auth.nick}</span>
                     </a>
                 </li>
                 <li className="list-end__item">
-                    <a href="#" className="list-end__link">
+                    <NavLink to="/social/ajustes" className="list-end__link">
                         <i className="fa-solid fa-gear"></i>
                         <span className="list-end__name">Ajustes</span>
-                    </a>
+                    </NavLink>
                 </li>
                 <li className="list-end__item">
                     <NavLink to="/social/logout" className="list-end__link">
