@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
+import useAuth from "../../hooks/useAuth";
+
 import { Global } from "../../helpers/Global";
 import avatar from "../../assets/img/user.png";
 
 
 export const People = () => {
 
+  const {auth} = useAuth();
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
-  const [isMorePage, setIsMorePege] = useState(true)
+  const [isMorePage, setIsMorePege] = useState(true);
+  const [following, setFollowing] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getUsers(1);
@@ -16,6 +21,9 @@ export const People = () => {
 
   const getUsers = async(nextPage = 1) => { 
     
+    // Efecto de carga
+    setIsLoading(true);
+  
     // peticion sacar usuario
     const request = await fetch(Global.url + 'user/list/' + nextPage, {
       method: "GET",
@@ -39,10 +47,13 @@ export const People = () => {
       }
 
       setUsers(newUsers);
+      setFollowing(data.user_following);
+      setIsLoading(false);
+
     }
 
     // paginacion
-    if (users.length >= data.total) {
+    if (users.length >= (data.total - data.users.length)) {
       setIsMorePege(false)
     }
   }
@@ -53,7 +64,53 @@ export const People = () => {
     setPage(next);
 
     getUsers(next);
+  }
+
+  const follow = async (userId) => { 
+    // peticion al backen para guardar el follow
+    const request = await fetch(Global.url + "follow/save", {
+      method: "POST",
+      body: JSON.stringify({followed: userId}),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+      }
+    });
+
+    const data = await request.json();
+
+    // cuando este todo correto
+    if (data.status == "success") {
+      
+      // actualizar estado de following, agregando nuevo follow
+      setFollowing([...following, userId])
     }
+
+
+  }
+
+  const unfollow = async (userId) => { 
+    // peticion al backen para borrar el follow
+    const request = await fetch(Global.url + "follow/unfollow/" + userId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token"),
+      },
+    });
+
+    const data = await request.json();
+
+    // cuando este todo correto
+    if (data.status == "success") {
+      
+      // actualizar estado de following
+      let filterFollowings = following.filter(followingUserId => userId !== followingUserId);
+      setFollowing(filterFollowings);
+    }
+
+
+  }
 
   return (
     <>
@@ -108,19 +165,32 @@ export const People = () => {
                   </div>
                 </div>
 
-                <div className="post__buttons">
-                  <a href="#" className="post__button post__button--green">
-                    Seguir
-                  </a>
+                {user._id != auth._id && (
+                  <div className="post__buttons">
+                    {!following.includes(user._id) && (
+                      <button
+                        className="post__button post__button--green"
+                        onClick={() => follow(user._id)}>
+                        Seguir
+                      </button>
+                    )}
 
-                  {/* <a href="#" className="post__button">
-                Dejar de Seguir
-              </a> */}
-                </div>
+                    {following.includes(user._id) && (
+                      <button
+                        className="post__button"
+                        onClick={() => unfollow(user._id)}>
+                        Dejar de Seguir
+                      </button>
+                    )}
+                  </div>
+                )}
               </article>
             );
           })}
         </div>
+
+        {isLoading ? <div>Cargando...</div> : ""}
+
         {isMorePage && (
           <div className="content__container-btn">
             <button className="content__btn-more-post" onClick={nextPage}>
