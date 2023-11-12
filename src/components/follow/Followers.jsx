@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Global } from "../../helpers/Global";
 import { UserList } from "../user/UserList";
 import { useParams } from "react-router-dom";
+import { GetProfile } from "../../helpers/GetProfile";
 // import avatar from "../../../assets/img/user.png";
 
 export const Followers = () => {
@@ -11,12 +12,15 @@ export const Followers = () => {
   const [isMorePage, setIsMorePege] = useState(true);
   const [following, setFollowing] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState({});
+
 
   const params = useParams();
 
   useEffect(() => {
     getUsers(1);
-  }, []);
+    GetProfile(params.userId, setUserProfile);
+  }, [params.userId]);
 
   const getUsers = async (nextPage = 1) => {
     // Efecto de carga
@@ -72,7 +76,7 @@ export const Followers = () => {
     <>
       <section className="layout__content">
         <header className="content__header">
-          <h1 className="content__title">Seguidores de NOMBRE</h1>
+          <h1 className="content__title">Seguidores de {userProfile.name}</h1>
         </header>
 
         <UserList
