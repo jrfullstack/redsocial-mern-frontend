@@ -5,6 +5,8 @@ import { Global } from "../../helpers/Global";
 import avatar from "../../assets/img/user.png";
 import PropTypes from "prop-types";
 
+import ReactTimeAgo from "react-time-ago";
+
 
 
 export const UserList = ({ users, getUsers, following, setFollowing, setPage, page, isMorePage, isLoading }) => {
@@ -72,7 +74,9 @@ export const UserList = ({ users, getUsers, following, setFollowing, setPage, pa
             <article className="posts__post" key={user._id}>
               <div className="post__container">
                 <div className="post__image-user">
-                  <Link to={"/social/perfil/" + user._id} className="post__image-link">
+                  <Link
+                    to={"/social/perfil/" + user._id}
+                    className="post__image-link">
                     {user.image != "default.png" && (
                       <img
                         src={Global.url + "user/avatar/" + user.image}
@@ -94,12 +98,16 @@ export const UserList = ({ users, getUsers, following, setFollowing, setPage, pa
 
                 <div className="post__body">
                   <div className="post__user-info">
-                    <Link to={"/social/perfil/" + user._id} className="user-info__name">
+                    <Link
+                      to={"/social/perfil/" + user._id}
+                      className="user-info__name">
                       {user.name} {user.surname}
                     </Link>
                     <span className="user-info__divider"> | </span>
-                    <Link to={"/social/perfil/" + user._id} className="user-info__create-date">
-                      {user.created_at}
+                    <Link
+                      to={"/social/perfil/" + user._id}
+                      className="user-info__create-date">
+                      <ReactTimeAgo date={user.created_at} locale="es-ES" />
                     </Link>
                   </div>
 
