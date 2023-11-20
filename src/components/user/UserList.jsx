@@ -89,13 +89,6 @@ export const UserList = ({ users, getUsers, following, setFollowing, setPage, pa
                         alt="Foto de perfil"
                       />
                     )}
-
-
-                    {/* <img
-                        src={avatar}
-                        className="post__user-image"
-                        alt="Foto de perfil"
-                      /> */}
                   </Link>
                 </div>
 
